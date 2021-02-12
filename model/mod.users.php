@@ -79,13 +79,19 @@
     // remove user from to the DB
     public function delete($userId) {
       try {
-        $requete = "DELETE from users where userid = '$userId' ";
-        $stmt = $con->query($requete);
-      }
-        catch(PDOException $e) {
-          $this->pdo = NULL; // bye db
+        $req = "DELETE FROM `users`
+                WHERE `user_id` = :user_id";
+        $prep = $this->pdo->prepare($req);
+        $prep->execute([
+          ":user_id" => $userId
+        ]);
+        return $prep->fetch();
+      } catch (PDOException $e) {
+        $this->pdo = NULL; // bye db
         exit("OOPS - DB error : " . $e->getMessage());
-        }
+      }
+    }
       
+    }
 
-  }
+
